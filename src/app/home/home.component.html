@@ -1,0 +1,127 @@
+<div class="card border-primary mb-3">
+	<div class="card-header">ToDo's</div>
+	<div class="card-body text-primary">
+		<h5 class="card-title">Listado de ToDo's</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <span><strong>ToDo's completados:</strong> {{estadisticas.true}}</span>
+                <span> - <strong>ToDo's pendientes:</strong> {{estadisticas.false}}</span>
+
+                <hr>
+            </div>
+
+        </div>
+		<div class="row">
+
+			<div class="my-2 text-left col-md-8">
+            	<button class="btn btn-rounded btn-info" type="button"
+					(click)='mostrarTodos()'>Mostrar todos</button>
+				<button class="btn btn-rounded btn-info ml-10" type="button"
+					(click)='mostrarTitulos()'>Mostrar solo los títulos</button>
+				<button class="btn btn-rounded btn-success ml-10" type="button"
+					(click)='mostrarCompletados()'>Mostrar completados </button>
+				<button class="btn btn-rounded btn-danger ml-10" type="button"
+					(click)='mostrarPendientes()'>Mostrar pendientes</button>
+			</div>
+			<div class="text-right col-md-4">
+				<button type="button" class="btn btn-primary " data-toggle="modal"
+					data-target="#modalTodos">
+					<i class="fa fa-bars"></i> Crear un nuevo ToDo
+				</button>
+			</div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <input (keyup)="filtrarUser($event)"  type="number" class="form-control" placeholder="Buscar por id">
+                </div>
+            </div>
+		</div>
+
+		<table class="table table-bordered table-striped"
+			*ngIf="!mostrarSoloTitulos">
+			<thead>
+				<tr>
+					<th>Identificador</th>
+					<th>Ident. Usuario</th>
+					<th>Título</th>
+					<th>Estado</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr
+					*ngFor="let todo of todos  | paginate: { itemsPerPage: 8, currentPage: p }; let i = index">
+					<td>{{ todo.id }}</td>
+					<td>{{ todo.userId }}</td>
+					<td>{{ todo.title }}</td>
+					<td *ngIf="todo.completed == true">Completado</td>
+					<td *ngIf="todo.completed == false">Pendiente</td>
+				</tr>
+			</tbody>
+		</table>
+		<table class="table table-bordered table-striped"
+			*ngIf="mostrarSoloTitulos">
+			<thead>
+				<tr>
+					<th>Título</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr
+					*ngFor="let t of titulos  | paginate: { itemsPerPage: 8, currentPage: p }; let i = index">
+					<td>{{ t }}</td>
+				</tr>
+			</tbody>
+		</table>
+		<pagination-controls (pageChange)="p = $event"></pagination-controls>
+		Total {{todos.length}}
+	</div>
+
+	<div class="modal fade" id="modalTodos" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Nuevo ToDo</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form (ngSubmit)="guardarTodo(forma)" #forma="ngForm" novalidate>
+						<div class="form-group">
+							<label class="text-left">Título del ToDo</label> <input
+								type="text" class="form-control" id="tituloTodo"
+								placeholder="Introduce el título... (1 caracteres mínimo)"
+								name="tituloTodo" required="true" minlength="1"
+								[(ngModel)]="todo.title">
+						</div>
+						<div class="form-group">
+							<label class="text-left">ID del usuario</label> <input
+								type="number" class="form-control" id="idUusario"
+								placeholder="Introduce el id del usuario..." name="idUusario"
+								required="true" [(ngModel)]="todo.userId">
+						</div>
+						<div class="form-group">
+							<label class="text-left">Completado</label> <input type="radio"
+								name="completado" class="ml-10" [(ngModel)]="todo.completed"
+								[value]="true">
+						</div>
+						<div class="form-group">
+							<label class="text-left">Pendiente</label> <input type="radio"
+								name="pendiente" class="ml-10" [(ngModel)]="todo.completed"
+								[value]="false">
+						</div>
+						<div class="alert alert-danger"
+							*ngIf="errorCuestionario && !forma.valid">Revise los campos</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">Cerrar</button>
+							<button type="button" type="submit" data-dismiss="modal"
+								class="btn btn-primary" (click)="guardarTodo(forma)">Guardar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,34 @@
+<div class="card border-primary mb-3">
+	<div class="card-header">Jobs</div>
+	<div class="card-body text-primary">
+		<h5 class="card-title">Listado de Jobs en ejecucción</h5>
+
+        <div class="row">
+
+			<div class="my-2 text-left col-md-8">
+				<button class="btn btn-rounded btn-danger ml-10" type="button"  *ngIf="tareasEjecutandose"
+					(click)='pararTareas()'>Parar tareas</button>
+                    <button class="btn btn-rounded btn-primary ml-10" type="button" *ngIf="!tareasEjecutandose"
+    					(click)='iniciarTareas()'>Inciar tareas</button>
+			</div>
+        </div>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Método</th>
+                    <th>Clase</th>
+                    <th>Delay al arrancar el server</th>
+                    <th>Intervalo (ms)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor=" let job of jobs">
+                    <td>{{job.task.runnable.method.name}}</td>
+                    <td>{{job.task.runnable.method.declaringClass}}}</td>
+                    <td>{{job.task.initialDelay}}</td>
+                    <td>{{job.task.interval}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
